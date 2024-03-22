@@ -11,6 +11,8 @@ from dataclasses import dataclass
 from queue import PriorityQueue
 from typing import cast
 
+from nanoid import generate
+
 from orthogonalrouting.Common import NOT_SET_INT
 from orthogonalrouting.Common import NOT_SET_SENTINEL
 
@@ -19,7 +21,7 @@ from orthogonalrouting.graph.priorityqueue.IPriorityQueue import IPriorityQueue
 from orthogonalrouting.graph.priorityqueue.InvalidOperationException import InvalidOperationException
 
 
-@dataclass(kw_only=True, slots=True)
+@dataclass(kw_only=True, slots=True, order=True)
 class HeapNode:
     id:              int
     data:            Any = NOT_SET_SENTINEL
@@ -42,7 +44,7 @@ class SimplePriorityQueue(IPriorityQueue):
 
         self._priorityQueue: PriorityQueue = cast(PriorityQueue, None)
         self._cache:         HeapNodeCache = cast(HeapNodeCache, None)
-        self._nodeIdCounter: int           = NOT_SET_INT
+        # self._nodeIdCounter: int           = NOT_SET_INT
 
         self._initialize()
 
@@ -61,8 +63,9 @@ class SimplePriorityQueue(IPriorityQueue):
         if data in self._cache.keys():
             raise InvalidOperationException(f'Data is already enqueue`d {data}')
 
-        heapNode: HeapNode = HeapNode(id=self._nodeIdCounter, data=data, priority=priority)
-        self._nodeIdCounter += 1
+        nodeId: int = generate(size=8)
+        heapNode: HeapNode = HeapNode(id=nodeId, data=data, priority=priority)
+        # self._nodeIdCounter += 1
 
         # self.logger.info(f'New heap node: {heapNode}')
         self._cache[data]      = heapNode
@@ -97,12 +100,16 @@ class SimplePriorityQueue(IPriorityQueue):
         self._priorityQueue = PriorityQueue()
         items = self._cache.keys()
         for data in items:
-            if data == node:
-                heapNode: HeapNode = self._cache[data]
+            heapNode: HeapNode = self._cache[data]
 
-                self.enqueue(data=data, priority=newPriority)
+            if data == node:
+                # Make it  maxheap !!Note the inverted priority
+                heapNode.priority  = -newPriority
+                queueTuple: QueueTuple = QueueTuple((-newPriority, heapNode))
             else:
-                pass
+                queueTuple: QueueTuple = QueueTuple((heapNode.priority, heapNode))
+
+            self._priorityQueue.put_nowait(queueTuple)
 
     def contains(self, data: D) -> bool:
         return data in self._cache.keys()

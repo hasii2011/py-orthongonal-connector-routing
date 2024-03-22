@@ -40,6 +40,7 @@ class TestSimplePriorityQueue(BaseTestPriorityQueue):
         ozzeeData: TestData = TestData(name='Ozzee')
         fskData:   TestData = TestData(name='FKS')
         hasiiData: TestData = TestData(name='HASII')
+
         self._priorityQueue.enqueue(priority=2, data=ozzeeData)
         self._priorityQueue.enqueue(priority=3, data=fskData)
         self._priorityQueue.enqueue(priority=1, data=hasiiData)
@@ -97,12 +98,39 @@ class TestSimplePriorityQueue(BaseTestPriorityQueue):
 
         self.assertEqual(False, ans, 'Incoherent state')
 
-    # def testUpdatePriority(self):
-    #     priorityQueue: IPriorityQueue = self._priorityQueue
-    #     priorityQueue, testData = self._buildPotentiallyLargePriorityQueue(priorityQueue=priorityQueue)
-    #
-    #     self.logger.info(f'Enqueued: {priorityQueue.count} test objects')
-    #     self._priorityQueue.updatePriority(node=testData, newPriority=9999)
+    def testSimpleUpdatePriority(self):
+        ozzeeData: TestData = TestData(name='Ozzee')
+        fskData: TestData = TestData(name='FKS')
+        hasiiData: TestData = TestData(name='HASII')
+
+        self._priorityQueue.enqueue(priority=2, data=ozzeeData)
+        self._priorityQueue.enqueue(priority=3, data=fskData)
+        self._priorityQueue.enqueue(priority=1, data=hasiiData)
+
+        self._priorityQueue.updatePriority(node=hasiiData, newPriority=200)
+
+        newHighest: TestData = self._priorityQueue.peek()
+
+        self.assertEqual(hasiiData, newHighest, 'Priority update did not work!!!')
+
+    def testUpdatePriorityLargeQueue(self):
+        priorityQueue: IPriorityQueue = self._priorityQueue
+        priorityQueue, testData = self._buildPotentiallyLargePriorityQueue(priorityQueue=priorityQueue)
+
+        self.logger.info(f'Enqueued: {priorityQueue.count} test objects')
+
+        currentHighest: TestData = self._priorityQueue.peek()
+
+        self.logger.info(f'Current highest: {currentHighest}')
+        self.logger.info(f'Data to update to highest: {testData}')
+
+        self._priorityQueue.updatePriority(node=testData, newPriority=MAX_PRIORITY + 2)
+
+        newHighest: TestData = self._priorityQueue.peek()
+
+        self.logger.info(f'New highest: {newHighest}')
+
+        self.assertEqual(testData, newHighest, 'Was not updated')
 
     def _buildPotentiallyLargePriorityQueue(self, priorityQueue: IPriorityQueue) -> Tuple[IPriorityQueue, TestData]:
 
@@ -110,7 +138,7 @@ class TestSimplePriorityQueue(BaseTestPriorityQueue):
         for x in range(LARGE_NUMBER_OF_NODES):
 
             randomPriority: int = randint(1, MAX_PRIORITY)
-            testData = TestData(f'TestData{x} priority: {randomPriority}')
+            testData = TestData(f'TestData{x}')
             self._priorityQueue.enqueue(priority=randomPriority, data=testData)
 
         return priorityQueue, testData
