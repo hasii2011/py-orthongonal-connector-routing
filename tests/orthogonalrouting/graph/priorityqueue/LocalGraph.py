@@ -1,4 +1,4 @@
-
+# type: ignore
 import math
 
 from orthogonalrouting.graph.priorityqueue.CustomPriorityQueue import CustomPriorityQueue

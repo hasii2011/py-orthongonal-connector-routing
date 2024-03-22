@@ -13,7 +13,7 @@ class CustomPriorityQueue:
         self.id_of = id_of
         self._elem_idxs = {}
 
-        for i, elem in enumerate(self):
+        for i, elem in enumerate(self):     # type: ignore
             self._add_elem_idx(elem=elem, idx=i)
 
         self._heapify()

@@ -70,7 +70,7 @@ class SimplePriorityQueue(IPriorityQueue):
         queueTuple: QueueTuple = QueueTuple((-priority, heapNode))
         self._priorityQueue.put_nowait(queueTuple)
 
-    def dequeue(self) -> D: # type: ignore
+    def dequeue(self) -> D:     # type: ignore
 
         if self._priorityQueue.empty() is True:
             return cast(D, None)

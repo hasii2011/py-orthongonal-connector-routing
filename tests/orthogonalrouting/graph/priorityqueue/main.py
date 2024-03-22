@@ -1,5 +1,5 @@
 
-from tests.orthogonalrouting.graph.priorityqueue.LocalGraph import LocalGraph
+from tests.orthogonalrouting.graph.priorityqueue.LocalGraph import LocalGraph   # type: ignore
 
 if __name__ == "__main__":
     with open("input.txt", "rt") as f:
