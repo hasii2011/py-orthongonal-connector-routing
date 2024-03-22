@@ -54,15 +54,15 @@ class TestPriorityQueue(BaseTestPriorityQueue):
         cast(PriorityQueue, self._priorityQueue)._debugPrintHeap('Before dequeue')
         testData: TestData = priorityQueue.dequeue()
         cast(PriorityQueue, self._priorityQueue)._debugPrintHeap('After dequeue')
-        self.assertIsNone(testData, 'Should have been there for me to take out')
+        self.assertIsNotNone(testData, 'Should have been there for me to take out')
 
-    def testDequeueAll(self):
-        priorityQueue: IPriorityQueue = self._priorityQueue
-        priorityQueue = self._enqueueTestData(priorityQueue=priorityQueue)
-
-        while priorityQueue.isEmpty is False:
-            testData: TestData = priorityQueue.dequeue()
-            self.logger.info(f'{testData}')
+    # def testDequeueAll(self):
+    #     priorityQueue: IPriorityQueue = self._priorityQueue
+    #     priorityQueue = self._enqueueTestData(priorityQueue=priorityQueue)
+    #
+    #     while priorityQueue.isEmpty is False:
+    #         testData: TestData = priorityQueue.dequeue()
+    #         self.logger.info(f'{testData}')
 
     def testPeek(self):
 

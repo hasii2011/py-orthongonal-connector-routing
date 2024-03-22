@@ -65,7 +65,7 @@ class BaseTestPriorityQueue(UnitTestBase):
     def _enqueueTestData(self, priorityQueue: IPriorityQueue) -> IPriorityQueue:
 
         for idx in range(TEST_DATA_SIZE):
-            priorityQueue.enqueue(data=TestData(name=f'Data{idx+1}'), priority=TEST_DATA_SIZE - idx)
+            priorityQueue.enqueue(data=TestData(name=f'Data{idx+1}'), priority=idx + 1)
 
         return priorityQueue
 

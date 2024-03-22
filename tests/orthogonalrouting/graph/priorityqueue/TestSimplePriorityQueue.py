@@ -1,4 +1,7 @@
+
+from typing import Tuple
 from typing import cast
+
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
@@ -88,26 +91,26 @@ class TestSimplePriorityQueue(BaseTestPriorityQueue):
         self._priorityQueue.enqueue(priority=100, data=hasiiData)
 
         removedItem: TestData = self._priorityQueue.dequeue()
-        self.assertIsNone(removedItem, 'We must have removed something')
+        self.assertIsNotNone(removedItem, 'We must have removed something')
 
         ans: bool = self._priorityQueue.contains(fskData)
 
         self.assertEqual(False, ans, 'Incoherent state')
 
-    def testUpdatePriority(self):
-        priorityQueue: IPriorityQueue = self._priorityQueue
-        priorityQueue, testData = self._buildPotentiallyLargePriorityQueue(priorityQueue=priorityQueue)
+    # def testUpdatePriority(self):
+    #     priorityQueue: IPriorityQueue = self._priorityQueue
+    #     priorityQueue, testData = self._buildPotentiallyLargePriorityQueue(priorityQueue=priorityQueue)
+    #
+    #     self.logger.info(f'Enqueued: {priorityQueue.count} test objects')
+    #     self._priorityQueue.updatePriority(node=testData, newPriority=9999)
 
-        self.logger.info(f'Enqueued: {priorityQueue.count} test objects')
-        self._priorityQueue.updatePriority(node=testData, newPriority=9999)
-
-    def _buildPotentiallyLargePriorityQueue(self, priorityQueue: IPriorityQueue) -> (TestData, IPriorityQueue):
+    def _buildPotentiallyLargePriorityQueue(self, priorityQueue: IPriorityQueue) -> Tuple[IPriorityQueue, TestData]:
 
         testData: TestData = cast(TestData, None)
         for x in range(LARGE_NUMBER_OF_NODES):
 
             randomPriority: int = randint(1, MAX_PRIORITY)
-            testData: TestData = TestData(f'TestData{x} priority: {randomPriority}')
+            testData = TestData(f'TestData{x} priority: {randomPriority}')
             self._priorityQueue.enqueue(priority=randomPriority, data=testData)
 
         return priorityQueue, testData

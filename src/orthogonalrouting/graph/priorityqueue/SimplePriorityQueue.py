@@ -28,7 +28,7 @@ class HeapNode:
 
 HeapNodeCache = NewType('HeapNodeCache', Dict[Any, HeapNode])
 
-QueueTuple = NewType('QueueTuple', tuple[int, D])
+QueueTuple = NewType('QueueTuple', tuple[int, Any])
 
 
 class SimplePriorityQueue(IPriorityQueue):
@@ -66,10 +66,11 @@ class SimplePriorityQueue(IPriorityQueue):
 
         # self.logger.info(f'New heap node: {heapNode}')
         self._cache[data]      = heapNode
+        # Make it  maxheap !!Note the inverted priority
         queueTuple: QueueTuple = QueueTuple((-priority, heapNode))
         self._priorityQueue.put_nowait(queueTuple)
 
-    def dequeue(self) -> D:
+    def dequeue(self) -> D: # type: ignore
 
         if self._priorityQueue.empty() is True:
             return cast(D, None)
@@ -106,7 +107,7 @@ class SimplePriorityQueue(IPriorityQueue):
     def contains(self, data: D) -> bool:
         return data in self._cache.keys()
 
-    def peek(self) -> D:
+    def peek(self) -> D:    # type: ignore
         """
         This is only safe in single-threaded programs.  Also, I have only validated this
         on Python 3.11.7

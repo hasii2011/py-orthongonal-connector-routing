@@ -41,6 +41,8 @@ IDX_MAXIMUM_HEAP_ENTRY: int = 1
 
 
 class PriorityQueue(IPriorityQueue):
+    """
+    """
 
     def __init__(self, cmp: CmpMethod):
 
@@ -76,7 +78,8 @@ class PriorityQueue(IPriorityQueue):
 
         self._count += 1
 
-        heapNode: HeapNode = HeapNode(id=self._nodeIdCounter, data=data, priority=priority, positionInQueue=self._count)
+        # Make it a maxheap  invert priority
+        heapNode: HeapNode = HeapNode(id=self._nodeIdCounter, data=data, priority=-priority, positionInQueue=self._count)
         self._nodeIdCounter += 1
         # self.logger.info(f'New heap node: {heapNode}')
         self._cache[data]       = heapNode
@@ -86,7 +89,7 @@ class PriorityQueue(IPriorityQueue):
 
         self._debugPrintHeap('after enqueue')
 
-    def dequeue(self) -> D:
+    def dequeue(self) -> D:     # type: ignore
 
         if self.isEmpty is True:
             return cast(D, None)

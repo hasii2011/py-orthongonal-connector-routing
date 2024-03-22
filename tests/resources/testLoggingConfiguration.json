@@ -23,23 +23,23 @@
             "propagate": "False"
         },
         "__main__": {
-            "level": "INFO",
+            "level": "WARNING",
             "propagate": "False"
         },
         "orthogonalrouting": {
-            "level":     "INFO",
+            "level":     "WARNING",
             "propagate": "True"
         },
         "orthogonalrouting.graph.priorityqueue": {
-            "level":     "DEBUG",
+            "level":     "WARNING",
             "propagate": "True"
         },
         "tests": {
-            "level":     "INFO",
+            "level":     "WARNING",
             "propagate": "False"
         },
         "codeallybasic.UnitTestBase": {
-            "level":     "INFO",
+            "level":     "WARNING",
             "propagate": "False"
         }
     }
