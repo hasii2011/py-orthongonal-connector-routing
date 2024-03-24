@@ -1,5 +1,6 @@
 
 from typing import Any
+from typing import cast
 
 from abc import ABC
 from abc import abstractmethod
@@ -31,3 +32,6 @@ class INode(ABC):
     @abstractmethod
     def key(self) -> Any:
         pass
+
+
+NO_NODE: INode = cast(INode, None)

@@ -20,17 +20,6 @@ class Node(INode):
         self._x: int = x
         self._y: int = y
 
-    @classmethod
-    def defaultNode(cls) -> INode:
-        """
-        Emulates C# behavior
-
-        return default(N);
-
-        Returns:  A default node
-        """
-        return Node()
-
     @property
     def x(self) -> int:
         return self._x

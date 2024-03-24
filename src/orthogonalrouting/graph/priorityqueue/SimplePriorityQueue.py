@@ -35,16 +35,22 @@ QueueTuple = NewType('QueueTuple', tuple[int, Any])
 
 class SimplePriorityQueue(IPriorityQueue):
     """
-    Wrap Python's priority queue;  It is a minheap, so we invert the priorities.
+    Wrap Python's priority queue;  It is a minheap
     """
 
-    def __init__(self):
+    def __init__(self, maxHeap: bool = False):
+        """
+
+        Args:
+            maxHeap:  Set this to true to get a maxheap
+        """
 
         self.logger: Logger = getLogger(__name__)
 
         self._priorityQueue: PriorityQueue = cast(PriorityQueue, None)
         self._cache:         HeapNodeCache = cast(HeapNodeCache, None)
-        # self._nodeIdCounter: int           = NOT_SET_INT
+
+        self._isMaxHeap: bool = maxHeap
 
         self._initialize()
 
@@ -70,7 +76,9 @@ class SimplePriorityQueue(IPriorityQueue):
         # self.logger.info(f'New heap node: {heapNode}')
         self._cache[data]      = heapNode
         # Make it  maxheap !!Note the inverted priority
-        queueTuple: QueueTuple = QueueTuple((-priority, heapNode))
+        if self._isMaxHeap is True:
+            priority = -priority
+        queueTuple: QueueTuple = QueueTuple((priority, heapNode))
         self._priorityQueue.put_nowait(queueTuple)
 
     def dequeue(self) -> D:     # type: ignore
@@ -104,10 +112,13 @@ class SimplePriorityQueue(IPriorityQueue):
 
             if data == node:
                 # Make it  maxheap !!Note the inverted priority
-                heapNode.priority  = -newPriority
-                queueTuple: QueueTuple = QueueTuple((-newPriority, heapNode))
+                if self._isMaxHeap is True:
+                    newPriority = -newPriority
+
+                heapNode.priority  = newPriority
+                queueTuple: QueueTuple = QueueTuple((newPriority, heapNode))
             else:
-                queueTuple: QueueTuple = QueueTuple((heapNode.priority, heapNode))
+                queueTuple = QueueTuple((heapNode.priority, heapNode))
 
             self._priorityQueue.put_nowait(queueTuple)
 

@@ -11,8 +11,8 @@ from orthogonalrouting.graph.interfaces.INode import INode
 
 class IEdge(ABC):
 
-    @abstractmethod
     @property
+    @abstractmethod
     def key(self) -> Any:
         pass
 
@@ -26,8 +26,8 @@ class IEdge(ABC):
     def source(self, value: INode):
         pass
 
-    @abstractmethod
     @property
+    @abstractmethod
     def destination(self) -> INode:
         pass
 
@@ -36,8 +36,8 @@ class IEdge(ABC):
     def destination(self, value: INode):
         pass
 
-    @abstractmethod
     @property
+    @abstractmethod
     def weight(self) -> float:
         pass
 

@@ -9,12 +9,12 @@ from copy import deepcopy
 
 from dataclasses import dataclass
 
-from orthogonalrouting.graph.Node import Node
+from orthogonalrouting.graph.interfaces.INode import INode
+from orthogonalrouting.graph.interfaces.INode import NO_NODE
+
 from orthogonalrouting.graph.Nodes import Nodes
 
 from orthogonalrouting.graph.bst.IPriorityBST import IPriorityBST
-from orthogonalrouting.graph.interfaces.INode import INode
-
 
 NO_PRIORITY_BST_NODE: 'PriorityBSTNode' = cast('PriorityBSTNode', None)
 
@@ -109,7 +109,7 @@ class PriorityBST(IPriorityBST):
 
     def find(self, x: int = -1, y: int = -1, key: Any = None, node: INode = None) -> INode:
         """
-        My version of overloading from original C# code
+        My version of overloading from the original C# code
 
         Args:
             x:
@@ -208,11 +208,11 @@ class PriorityBST(IPriorityBST):
         current: PriorityBSTNode = self._root
         while True:
             if current is None:
-                return Node.defaultNode()
+                return NO_NODE
             if current.data.x == x and current.data.y == y:
                 return current.data
             if current.data.y < y:
-                return Node.defaultNode()
+                return NO_NODE
             if current.border >= x:
                 current = current.left
             else:
@@ -225,7 +225,7 @@ class PriorityBST(IPriorityBST):
         if len(findList) == 1:
             return findList[0]
         else:
-            return Node.defaultNode()
+            return NO_NODE
 
     def _findByNode(self, searchNode: INode) -> INode:
 
@@ -233,7 +233,7 @@ class PriorityBST(IPriorityBST):
         if len(findList) == 1:
             return findList[0]
         else:
-            return Node.defaultNode()
+            return NO_NODE
 
     # noinspection PyChainedComparisons
     def _intervalFind(self, x1: int, y1: int, x2: int, y2: int, bstNode: PriorityBSTNode) -> Nodes:

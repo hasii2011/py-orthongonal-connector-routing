@@ -56,7 +56,7 @@ class TestSimplePriorityQueue(BaseTestPriorityQueue):
 
         testData: TestData = priorityQueue.peek()
 
-        self.assertEqual('Data10', testData.name, 'Incorrect peek')
+        self.assertEqual('Data1', testData.name, 'Incorrect peek')
 
     def testDequeueEmpty(self):
 
@@ -94,7 +94,7 @@ class TestSimplePriorityQueue(BaseTestPriorityQueue):
         removedItem: TestData = self._priorityQueue.dequeue()
         self.assertIsNotNone(removedItem, 'We must have removed something')
 
-        ans: bool = self._priorityQueue.contains(fskData)
+        ans: bool = self._priorityQueue.contains(hasiiData)
 
         self.assertEqual(False, ans, 'Incoherent state')
 
@@ -109,9 +109,9 @@ class TestSimplePriorityQueue(BaseTestPriorityQueue):
 
         self._priorityQueue.updatePriority(node=hasiiData, newPriority=200)
 
-        newHighest: TestData = self._priorityQueue.peek()
+        newLowest: TestData = self._priorityQueue.peek()
 
-        self.assertEqual(hasiiData, newHighest, 'Priority update did not work!!!')
+        self.assertEqual(ozzeeData, newLowest, 'Priority update did not work!!!')
 
     def testUpdatePriorityLargeQueue(self):
         priorityQueue: IPriorityQueue = self._priorityQueue
@@ -119,16 +119,16 @@ class TestSimplePriorityQueue(BaseTestPriorityQueue):
 
         self.logger.info(f'Enqueued: {priorityQueue.count} test objects')
 
-        currentHighest: TestData = self._priorityQueue.peek()
+        currentLowest: TestData = self._priorityQueue.peek()
 
-        self.logger.info(f'Current highest: {currentHighest}')
-        self.logger.info(f'Data to update to highest: {testData}')
+        self.logger.info(f'Current lowest: {currentLowest}')
+        self.logger.info(f'Data to update to lowest: {testData}')
 
-        self._priorityQueue.updatePriority(node=testData, newPriority=MAX_PRIORITY + 2)
+        self._priorityQueue.updatePriority(node=testData, newPriority=1)
 
         newHighest: TestData = self._priorityQueue.peek()
 
-        self.logger.info(f'New highest: {newHighest}')
+        self.logger.info(f'New lowest: {newHighest}')
 
         self.assertEqual(testData, newHighest, 'Was not updated')
 

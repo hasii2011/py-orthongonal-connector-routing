@@ -1,14 +1,12 @@
 
-from typing import cast
-
 from logging import Logger
 from logging import getLogger
 
 from orthogonalrouting.graph.interfaces.IEdge import Edges
 from orthogonalrouting.graph.interfaces.IEdge import IEdge
-from orthogonalrouting.graph.interfaces.INode import INode
 
-NO_NODE: INode = cast(INode, None)
+from orthogonalrouting.graph.interfaces.INode import INode
+from orthogonalrouting.graph.interfaces.INode import NO_NODE
 
 
 class Edge(IEdge):
