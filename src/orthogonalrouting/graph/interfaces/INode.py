@@ -34,4 +34,4 @@ class INode(ABC):
         pass
 
 
-NO_NODE: INode = cast(INode, None)
+NO_INODE: INode = cast(INode, None)

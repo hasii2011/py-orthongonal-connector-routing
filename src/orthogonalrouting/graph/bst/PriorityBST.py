@@ -10,7 +10,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 
 from orthogonalrouting.graph.interfaces.INode import INode
-from orthogonalrouting.graph.interfaces.INode import NO_NODE
+from orthogonalrouting.graph.interfaces.INode import NO_INODE
 
 from orthogonalrouting.graph.Nodes import Nodes
 
@@ -208,11 +208,11 @@ class PriorityBST(IPriorityBST):
         current: PriorityBSTNode = self._root
         while True:
             if current is None:
-                return NO_NODE
+                return NO_INODE
             if current.data.x == x and current.data.y == y:
                 return current.data
             if current.data.y < y:
-                return NO_NODE
+                return NO_INODE
             if current.border >= x:
                 current = current.left
             else:
@@ -225,7 +225,7 @@ class PriorityBST(IPriorityBST):
         if len(findList) == 1:
             return findList[0]
         else:
-            return NO_NODE
+            return NO_INODE
 
     def _findByNode(self, searchNode: INode) -> INode:
 
@@ -233,7 +233,7 @@ class PriorityBST(IPriorityBST):
         if len(findList) == 1:
             return findList[0]
         else:
-            return NO_NODE
+            return NO_INODE
 
     # noinspection PyChainedComparisons
     def _intervalFind(self, x1: int, y1: int, x2: int, y2: int, bstNode: PriorityBSTNode) -> Nodes:

@@ -1,6 +1,7 @@
 
 from logging import Logger
 from logging import getLogger
+from typing import cast
 
 from orthogonalrouting.Common import X_SENTINEL
 from orthogonalrouting.Common import Y_SENTINEL
@@ -61,3 +62,6 @@ class Node(INode):
 
     def __repr__(self) -> str:
         return self.__str__()
+
+
+NO_NODE: Node = cast(Node, None)

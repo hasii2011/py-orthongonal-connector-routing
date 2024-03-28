@@ -1,24 +1,30 @@
 
+from typing import Tuple
 from typing import cast
 
 from logging import Logger
 from logging import getLogger
 
+from orthogonalrouting.Common import NOT_SET_INT
+
+from orthogonalrouting.enumerations.SearchAlgorithm import SearchAlgorithm
 
 from orthogonalrouting.graph.interfaces.IEdge import Edges
 from orthogonalrouting.graph.interfaces.IEdge import IEdge
 from orthogonalrouting.graph.interfaces.INode import INode
-from orthogonalrouting.graph.interfaces.INode import NO_NODE
+from orthogonalrouting.graph.interfaces.INode import NO_INODE
 
+from orthogonalrouting.graph.Node import Node
+from orthogonalrouting.graph.Nodes import Nodes
+from orthogonalrouting.graph.Nodes import nodesFactory
 from orthogonalrouting.graph.Edge import edgesFactory
 from orthogonalrouting.graph.GraphEdge import GraphEdge
 from orthogonalrouting.graph.GraphEdge import GraphEdges
-
 from orthogonalrouting.graph.GraphVertex import GraphVertex
 from orthogonalrouting.graph.GraphVertex import GraphVertices
 
-from orthogonalrouting.graph.Nodes import Nodes
-from orthogonalrouting.graph.Nodes import nodesFactory
+from orthogonalrouting.graph.shortestpathalgorithm.DijkstraAlgorithm import DijkstraAlgorithm
+from orthogonalrouting.graph.shortestpathalgorithm.ISearchAlgorithm import ISearchAlgorithm
 
 from orthogonalrouting.graph.bst.PriorityBST import PriorityBST
 
@@ -80,18 +86,35 @@ class Graph:
     def clear(self):
         self._tree.clear()
 
-    def find(self, key: str) -> INode:
+    def find(self, x: int = NOT_SET_INT, y: int = NOT_SET_INT, key: str = None) -> Node:
         """
+        Poor man's method overload
 
         Args:
+            x:
+            y:
             key:
 
         Returns:  The data associated with the GraphVertex.
         May return None if no data
-
         """
+        if x == NOT_SET_INT:
+            return self.findByKey(key=key)  # type: ignore
+        else:
+            return self.findByCoordinates(x=x, y=y)
+
+    def findByKey(self, key: str):
         result: INode = cast(GraphVertex, self._tree.find(key=key))
-        if result == NO_NODE:
+
+        if result == NO_INODE:
+            return result
+        else:
+            graphVertex: GraphVertex = cast(GraphVertex, result)
+            return graphVertex.data
+
+    def findByCoordinates(self, x: int, y: int):
+        result: INode = cast(GraphVertex, self._tree.find(x=x, y=y))
+        if result == NO_INODE:
             return result
         else:
             graphVertex: GraphVertex = cast(GraphVertex, result)
@@ -108,7 +131,7 @@ class Graph:
         edgesToReturn: Edges = edgesFactory()
 
         treeNode = self._tree.find(x=node.x, y=node.y)
-        if treeNode == NO_NODE:
+        if treeNode == NO_INODE:
             pass
         else:
             nodes: GraphVertices = cast(GraphVertices, self._tree.nodes)
@@ -147,12 +170,57 @@ class Graph:
     def removeEdge(self, edge: IEdge):
         self._removeEdgeBetweenNodes(firstNode=edge.source, secondNode=edge.destination)
 
+    def removeNode(self, node: INode):
+        foundNode: INode = self._tree.find(x=node.x, y=node.y)
+
+        self._tree.remove(foundNode)
+
+    def shortestPath(self, algorithm: SearchAlgorithm, startNode: INode, finishNode: INode) -> Tuple[Nodes, Edges]:
+
+        searchAlgorithm: ISearchAlgorithm
+        if algorithm == SearchAlgorithm.Dijkstra:
+            searchAlgorithm = DijkstraAlgorithm()
+        else:
+            assert False, 'Alternate search algorithm not yet implemented'
+
+        results: Tuple[Nodes, Edges] = searchAlgorithm.shortestPath(tree=self._tree, startNode=startNode, finishNode=finishNode)
+
+        return results
+
     def _removeEdgeBetweenNodes(self, firstNode: INode, secondNode: INode):
 
         first:  GraphVertex = cast(GraphVertex, self._tree.find(x=firstNode.x,  y=firstNode.y))
         second: GraphVertex = cast(GraphVertex, self._tree.find(x=secondNode.x, y=secondNode.y))
-        if first == NO_NODE or second == NO_NODE:
+        if first == NO_INODE or second == NO_INODE:
             return
         else:
             # var edge = first.Edges.Except(second.Edges).FirstOrDefault();
-            pass
+            difference:  GraphEdges = self._difference(first=first.edges, second=second.edges)
+            edgeToRemove: GraphEdge = self._firstOrNone(edges=difference)
+
+            if edgeToRemove is not None:
+                first.edges.remove(edgeToRemove)
+                second.edges.remove(edgeToRemove)
+
+    def _difference(self, first: GraphEdges, second: GraphEdges) -> GraphEdges:
+
+        if len(first) >= len(second):
+            return self._realDifference(longerList=first, shorterList=second)
+        else:
+            return self._realDifference(longerList=second, shorterList=first)
+
+    def _realDifference(self, longerList: GraphEdges, shorterList: GraphEdges) -> GraphEdges:
+
+        differenceList: GraphEdges = GraphEdges([])
+
+        for element in longerList:
+            if element not in shorterList:
+                differenceList.append(element)
+
+        return differenceList
+
+    def _firstOrNone(self, edges: GraphEdges):
+        if len(edges) == 0:
+            return None
+        else:
+            return edges[0]

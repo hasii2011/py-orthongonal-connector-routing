@@ -10,7 +10,7 @@ from orthogonalrouting.graph.interfaces.IEdge import Edges
 
 
 @dataclass
-class ShortestPath:
+class ShortestGraphPath:
 
     pathNodes: Nodes = field(default_factory=nodesFactory)
     pathEdges: Edges = field(default_factory=edgesFactory)

@@ -2,11 +2,10 @@
 from logging import Logger
 from logging import getLogger
 
+from orthogonalrouting.graph.Node import NO_NODE
+from orthogonalrouting.graph.Node import Node
 from orthogonalrouting.graph.interfaces.IEdge import Edges
 from orthogonalrouting.graph.interfaces.IEdge import IEdge
-
-from orthogonalrouting.graph.interfaces.INode import INode
-from orthogonalrouting.graph.interfaces.INode import NO_NODE
 
 
 class Edge(IEdge):
@@ -15,8 +14,8 @@ class Edge(IEdge):
         self.logger: Logger = getLogger(__name__)
 
         self._key: str = ''
-        self._source:      INode = NO_NODE
-        self._destination: INode = NO_NODE
+        self._source:      Node = NO_NODE
+        self._destination: Node = NO_NODE
         self._weight:      float  = 0.0
 
     @property
@@ -24,19 +23,19 @@ class Edge(IEdge):
         return self._key
 
     @property
-    def source(self) -> INode:
+    def source(self) -> Node:
         return self._source
 
     @source.setter
-    def source(self, node: INode):
+    def source(self, node: Node):
         self._source = node
 
     @property
-    def destination(self) -> INode:
+    def destination(self) -> Node:
         return self._destination
 
     @destination.setter
-    def destination(self, node: INode):
+    def destination(self, node: Node):
         self._destination = node
 
     @property
