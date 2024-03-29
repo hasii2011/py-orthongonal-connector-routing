@@ -9,8 +9,9 @@ from copy import deepcopy
 
 from dataclasses import dataclass
 
+from orthogonalrouting.graph.Node import NO_NODE
+from orthogonalrouting.graph.Node import Node
 from orthogonalrouting.graph.interfaces.INode import INode
-from orthogonalrouting.graph.interfaces.INode import NO_INODE
 
 from orthogonalrouting.graph.Nodes import Nodes
 
@@ -107,7 +108,7 @@ class PriorityBST(IPriorityBST):
             subNodes2: Nodes = cast(Nodes, [node for node in orderedNodes if node.x > self._root.border])
             self._buildSubTree(nodes=subNodes2, parent=self._root, isLeft=False)
 
-    def find(self, x: int = -1, y: int = -1, key: Any = None, node: INode = None) -> INode:
+    def find(self, x: int = -1, y: int = -1, key: Any = None, node: INode = None) -> Node:
         """
         My version of overloading from the original C# code
 
@@ -203,37 +204,37 @@ class PriorityBST(IPriorityBST):
     def _nodeSortX(self, e: INode):
         return e.x
 
-    def _findByCoordinates(self, x: int, y: int) -> INode:
+    def _findByCoordinates(self, x: int, y: int) -> Node:
 
         current: PriorityBSTNode = self._root
         while True:
             if current is None:
-                return NO_INODE
+                return NO_NODE
             if current.data.x == x and current.data.y == y:
                 return current.data
             if current.data.y < y:
-                return NO_INODE
+                return NO_NODE
             if current.border >= x:
                 current = current.left
             else:
                 current = current.right
 
-    def _findByKey(self, key: Any) -> INode:
+    def _findByKey(self, key: Any) -> Node:
 
         findList = [node for node in self._nodes if node.key == key]
 
         if len(findList) == 1:
             return findList[0]
         else:
-            return NO_INODE
+            return NO_NODE
 
-    def _findByNode(self, searchNode: INode) -> INode:
+    def _findByNode(self, searchNode: INode) -> Node:
 
         findList = [node for node in self._nodes if node == searchNode]
         if len(findList) == 1:
             return findList[0]
         else:
-            return NO_INODE
+            return NO_NODE
 
     # noinspection PyChainedComparisons
     def _intervalFind(self, x1: int, y1: int, x2: int, y2: int, bstNode: PriorityBSTNode) -> Nodes:

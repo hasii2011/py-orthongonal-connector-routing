@@ -97,6 +97,20 @@ class TestCSharpEnumerationBehavior(UnitTestBase):
 
         self.assertEqual(ConnectorOrientation.LEFT, leftEnumeration, 'Wah, I was expecting left')
 
+    def testTernaryExpression(self):
+
+        age: int = 64
+
+        status: str = 'subHuman' if age < 65 else 'Super duper person'
+
+        self.assertEqual('subHuman', status)
+
+        age = 67
+
+        status = 'subHuman' if age < 65 else 'Super duper person'
+
+        self.assertEqual('Super duper person', status, '')
+
     def _difference(self, first: StringList, second: StringList) -> StringList:
 
         if len(first) >= len(second):

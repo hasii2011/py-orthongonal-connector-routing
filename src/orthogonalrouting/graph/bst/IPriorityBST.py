@@ -5,6 +5,7 @@ from typing import Any
 from abc import ABC
 from abc import abstractmethod
 
+from orthogonalrouting.graph.Node import Node
 from orthogonalrouting.graph.Nodes import Nodes
 
 if TYPE_CHECKING:
@@ -48,7 +49,7 @@ class IPriorityBST(ABC):
 
     # IEnumerator<N> GetEnumerator();
     @abstractmethod
-    def find(self, x: int = -1, y: int = -1, key: Any = None, node: INode = None) -> INode:
+    def find(self, x: int = -1, y: int = -1, key: Any = None, node: Node = None) -> Node:
         """
         Find the node at location, Node or by an associated key
         Args:
