@@ -16,7 +16,7 @@ FRAME_WIDTH:  int = 1280
 FRAME_HEIGHT: int = 800
 
 
-class DemoPriorityQueueApp(App):
+class DemoOrthogonalRouting(App):
 
     def __init__(self):
 
@@ -50,5 +50,5 @@ class DemoPriorityQueueApp(App):
 
 
 if __name__ == '__main__':
-    testApp: DemoPriorityQueueApp = DemoPriorityQueueApp()
+    testApp: DemoOrthogonalRouting = DemoOrthogonalRouting()
     testApp.MainLoop()
