@@ -9,7 +9,6 @@ from dataclasses import field
 from orthogonalrouting.enumerations.ConnectorOrientation import ConnectorOrientation
 
 from orthogonalrouting.graph.Node import Node
-from orthogonalrouting.graph.interfaces.INode import INode
 
 from orthogonalrouting.models.Connection import Connection
 from orthogonalrouting.models.IInput import IInput
@@ -29,13 +28,13 @@ class Connector:
     sourceOrientation:      ConnectorOrientation = ConnectorOrientation.NOT_SET
     destinationOrientation: ConnectorOrientation = ConnectorOrientation.NOT_SET
 
-    def sourceNode(self) -> INode:
+    def sourceNode(self) -> Node:
         return self._calculateOrientationNode(orientation=self.sourceOrientation, item=self.source)
 
-    def destinationNode(self) -> INode:
+    def destinationNode(self) -> Node:
         return self._calculateOrientationNode(orientation=self.destinationOrientation, item=self.destination)
 
-    def _calculateOrientationNode(self, orientation: ConnectorOrientation, item: IInput) -> INode:
+    def _calculateOrientationNode(self, orientation: ConnectorOrientation, item: IInput) -> Node:
 
         match orientation:
             case ConnectorOrientation.LEFT:
@@ -50,4 +49,4 @@ class Connector:
             case ConnectorOrientation.BOTTOM:
                 return Node(x=item.x + item.width // 2, y=item.bottom)
             case _:
-                return cast(INode, None)
+                return cast(Node, None)

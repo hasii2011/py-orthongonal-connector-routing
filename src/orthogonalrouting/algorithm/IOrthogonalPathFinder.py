@@ -7,10 +7,12 @@ from abc import abstractmethod
 from orthogonalrouting.enumerations.SearchAlgorithm import SearchAlgorithm
 from orthogonalrouting.enumerations.ConnectorOrientation import ConnectorOrientation
 
-from orthogonalrouting.graph.interfaces.INode import INode
-from orthogonalrouting.models.Connection import Connections
+from orthogonalrouting.graph.Node import Node
 
+from orthogonalrouting.models.AlgorithmResults import AlgorithmResults
+from orthogonalrouting.models.Connection import Connections
 from orthogonalrouting.models.IInput import IInput
+from orthogonalrouting.models.IInput import InputList
 from orthogonalrouting.models.Point import Point
 from orthogonalrouting.models.Connection import Connection
 from orthogonalrouting.models.ShortestGraphPath import ShortestGraphPath
@@ -30,10 +32,14 @@ class IOrthogonalPathFinder(ABC):
     def margin(self, value: int):
         pass
 
+    @abstractmethod
+    def orthogonalPath(self, items: InputList, maxWidth: int, maxHeight: int, searchAlgorithm: SearchAlgorithm, targetConnector: Connector) -> AlgorithmResults:
+        pass
+
     # Algorithm steps
 
     @abstractmethod
-    def createLeadLines(self, items: List[IInput], maxWidth: int, maxHeight: int) -> Connections:
+    def createLeadLines(self, items: InputList, maxWidth: int, maxHeight: int) -> Connections:
         pass
 
     @abstractmethod
@@ -45,7 +51,7 @@ class IOrthogonalPathFinder(ABC):
         pass
 
     @abstractmethod
-    def shortestPath(self, startNode: INode, finishNode: INode, searchAlgorithm: SearchAlgorithm) -> ShortestGraphPath:
+    def shortestPath(self, startNode: Node, finishNode: Node, searchAlgorithm: SearchAlgorithm) -> ShortestGraphPath:
         pass
 
     @abstractmethod

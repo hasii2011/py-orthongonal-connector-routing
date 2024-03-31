@@ -38,6 +38,10 @@
             "level":     "WARNING",
             "propagate": "False"
         },
+        "tests.demo": {
+            "level":     "INFO",
+            "propagate": "False"
+        },
         "codeallybasic.UnitTestBase": {
             "level":     "INFO",
             "propagate": "False"

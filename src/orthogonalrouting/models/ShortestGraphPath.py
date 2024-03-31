@@ -14,3 +14,7 @@ class ShortestGraphPath:
 
     pathNodes: Nodes = field(default_factory=nodesFactory)
     pathEdges: Edges = field(default_factory=edgesFactory)
+
+
+def shortestGraphPathFactory() -> ShortestGraphPath:
+    return ShortestGraphPath()

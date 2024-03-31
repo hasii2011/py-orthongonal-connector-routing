@@ -4,11 +4,18 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from wx import BLACK
+from wx import BLACK_PEN
 from wx import Bitmap
 from wx import Brush
 from wx import Colour
 from wx import DC
 from wx import EVT_PAINT
+from wx import FONTFAMILY_SWISS
+from wx import FONTSTYLE_NORMAL
+from wx import FONTWEIGHT_BOLD
+from wx import FONTWEIGHT_NORMAL
+from wx import Font
 from wx import LIGHT_GREY
 from wx import MemoryDC
 from wx import PENSTYLE_DOT
@@ -19,18 +26,26 @@ from wx import PenInfo
 from wx import Rect
 from wx import ScrolledWindow
 from wx import WHITE
+from wx import WHITE_BRUSH
 from wx import Window
 # I know it is there
 # noinspection PyUnresolvedReferences
 from wx.core import PenStyle
 
-
+from orthogonalrouting.models.IInput import IInput
+from tests.demo.DemoItem import DemoItems
+from tests.demo.DiagramGenerator import DiagramGenerator
 
 DEFAULT_WIDTH = 6000
 A4_FACTOR:    float = 1.41
 
 PIXELS_PER_UNIT_X: int = 20
 PIXELS_PER_UNIT_Y: int = 20
+
+
+DEFAULT_PEN:       Pen   = BLACK_PEN
+DEFAULT_BRUSH:     Brush = WHITE_BRUSH
+DEFAULT_FONT_SIZE: int = 10
 
 
 class DemoDiagramFrame(ScrolledWindow):
@@ -57,7 +72,24 @@ class DemoDiagramFrame(ScrolledWindow):
 
         self.SetBackgroundColour(WHITE)
 
+        self._stroke: Pen   = DEFAULT_PEN
+        self._fill:   Brush = DEFAULT_BRUSH
+
+        self._textColor:   Colour = BLACK
+        self._defaultFont: Font   = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
+        self._nameFont:    Font   = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_BOLD)
+
+        self._diagramGenerator: DiagramGenerator = cast(DiagramGenerator, None)
+
         self.Bind(EVT_PAINT, self.onPaint)
+
+    @property
+    def diagramGenerator(self):
+        return self._diagramGenerator
+
+    @diagramGenerator.setter
+    def diagramGenerator(self, value):
+        self._diagramGenerator = value
 
     # noinspection PyUnusedLocal
     def Refresh(self, eraseBackground: bool = True, rect: Rect = None):
@@ -78,29 +110,9 @@ class DemoDiagramFrame(ScrolledWindow):
 
         self._drawGrid(memDC=mem, width=w, height=h, startX=x, startY=y)
 
-        # nodes: Nodes = self._layoutEngine.nodes
-        # for n in nodes:
-        #     parentNode: Node = cast(Node, n)
-        #     parentNode.drawNode(mem)
-        #     centerParentPoint: Point = self._computeShapeCenter(node=parentNode)
-        #
-        #     for c in parentNode.connections:
-        #         childNode: Node = cast(Node, c)
-        #         childNode.drawNode(mem)
-        #         centerChildPoint: Point = self._computeShapeCenter(node=childNode)
-        #         childNode.drawConnector(dc=mem, sourcePoint=centerParentPoint, destinationPoint=centerChildPoint)
-        #
-        #         for g in childNode.connections:
-        #             grandChildNode: Node = cast(Node, g)
-        #             grandChildNode.drawNode(dc=mem)
-        #             centerGrandChildPoint: Point = self._computeShapeCenter(node=grandChildNode)
-        #             grandChildNode.drawConnector(dc=mem, sourcePoint=centerChildPoint, destinationPoint=centerGrandChildPoint)
-        #
-        #             for gg in grandChildNode.connections:
-        #                 greatGrandChildNode: Node = cast(Node, gg)
-        #                 greatGrandChildNode.drawNode(dc=mem)
-        #                 centerGreatGrandChildPoint: Point = self._computeShapeCenter(node=greatGrandChildNode)
-        #                 greatGrandChildNode.drawConnector(dc=mem, sourcePoint=centerGrandChildPoint, destinationPoint=centerGreatGrandChildPoint)
+        demoItems: DemoItems = self._diagramGenerator.demoItems
+        for item in demoItems:
+            self.drawNode(dc=mem, item=item)
 
         dc.Blit(0, 0, w, h, mem, x, y)
 
@@ -127,6 +139,28 @@ class DemoDiagramFrame(ScrolledWindow):
         self.PrepareDC(dc)
 
         return dc
+
+    def drawNode(self, dc: DC, item: IInput):
+
+        savePen:   Pen   = dc.GetPen()
+        saveBrush: Brush = dc.GetBrush()
+
+        dc.SetPen(self._stroke)
+        dc.SetBrush(self._fill)
+
+        x:      int = item.x
+        y:      int = item.y
+        width:  int = item.width
+        height: int = item.height
+
+        dc.DrawRectangle(x=x, y=y, width=width, height=height)
+        (headerX, headerY, headerW, headerH) = self._drawHeader(dc=dc, item=item, name='TBD')
+        y = headerY + headerH
+
+        dc.DrawLine(x, y + 10, x + width, y + 10)
+
+        dc.SetPen(savePen)
+        dc.SetBrush(saveBrush)
 
     def _drawGrid(self, memDC: DC, width: int, height: int, startX: int, startY: int):
 
@@ -167,6 +201,50 @@ class DemoDiagramFrame(ScrolledWindow):
         pen:           Pen    = Pen(PenInfo(gridLineColor).Style(gridLineStyle).Width(1))
 
         return pen
+
+    def _drawHeader(self, dc: DC, item: IInput, name: str):
+        """
+        Calculate the class header position and size and display it if
+        a draw is True
+
+        Args:
+            dc:
+
+        Returns: tuple (x, y, w, h) = position and size of the header
+        """
+        dc.SetFont(self._defaultFont)
+        dc.SetTextForeground(self._textColor)
+
+        x: int = item.x
+        y: int = item.y
+
+        w = item.width
+        h = 0
+
+        # define space between the text and line
+        lth = dc.GetTextExtent("*")[1] // 2
+
+        # from where begin the text
+        h += lth
+
+        # draw a pyutClass name
+        # name: str = self._name
+        dc.SetFont(self._nameFont)
+        nameWidth: int = self._textWidth(dc, name)
+
+        dc.DrawText(name, x + (w - nameWidth) // 2, y + h)
+
+        dc.SetFont(self._defaultFont)
+        h += self._textHeight(dc, str(name)) // 2
+        return x, y, w, h
+
+    def _textWidth(self, dc: DC, text: str):
+        width = dc.GetTextExtent(text)[0]
+        return width
+
+    def _textHeight(self, dc: DC, text: str):
+        height = dc.GetTextExtent(text)[1]
+        return height
 
     # def _computeShapeCenter(self, node: Node) -> Point:
     #

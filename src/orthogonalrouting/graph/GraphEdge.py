@@ -20,8 +20,8 @@ class GraphEdge(IEdge):
         self._weight:      float = 0.0
 
         self._data:        Any         = None
-        self._source:      GraphVertex = cast(GraphVertex, None)
-        self._destination: GraphVertex = cast(GraphVertex, None)
+        self._source:      'GraphVertex' = cast('GraphVertex', None)
+        self._destination: 'GraphVertex' = cast('GraphVertex', None)
 
     @property
     def key(self) -> str:
@@ -32,19 +32,19 @@ class GraphEdge(IEdge):
         self._key = value
 
     @property
-    def source(self) -> GraphVertex:
+    def source(self) -> 'GraphVertex':
         return self._source
 
     @source.setter
-    def source(self, value: GraphVertex):
+    def source(self, value: 'GraphVertex'):
         self._source = value
 
     @property
-    def destination(self) -> GraphVertex:
+    def destination(self) -> 'GraphVertex':
         return self._destination
 
     @destination.setter
-    def destination(self, value: GraphVertex):
+    def destination(self, value: 'GraphVertex'):
         self._destination = value
 
     @property

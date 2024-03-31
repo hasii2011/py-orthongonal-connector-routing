@@ -1,4 +1,7 @@
 
+from typing import List
+from typing import NewType
+
 from abc import ABC
 from abc import abstractmethod
 
@@ -30,19 +33,9 @@ class IInput(ABC):
     def right(self) -> int:
         pass
 
-    @right.setter
-    @abstractmethod
-    def right(self, value: int):
-        pass
-
     @property
     @abstractmethod
     def bottom(self) -> int:
-        pass
-
-    @bottom.setter
-    @abstractmethod
-    def bottom(self, value: int):
         pass
 
     @property
@@ -64,3 +57,6 @@ class IInput(ABC):
     @abstractmethod
     def height(self, value: int):
         pass
+
+
+InputList = NewType('InputList', List[IInput])

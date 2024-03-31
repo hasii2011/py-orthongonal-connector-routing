@@ -65,7 +65,7 @@ class DijkstraAlgorithm(ISearchAlgorithm):
                 self._totalCosts[cast(GraphVertex, node)] = DOUBLE_MAX
                 self._minPriorityQueue.enqueue(data=node, priority=INT_MAX)
         #
-        #   TODO !!!
+        #
         #
         while self._minPriorityQueue.count > 0:
             newSmallest: GraphVertex = self._minPriorityQueue.dequeue()
@@ -73,18 +73,23 @@ class DijkstraAlgorithm(ISearchAlgorithm):
             for e in newSmallest.edges:
                 edge: Edge = cast(Edge, e)
                 # var possiblyUnvisitedNode = edge.Source == newSmallest ? edge.Destination : edge.Source;
-                possiblyUnvisitedNode: Node = edge.destination if edge.source == newSmallest else edge.source
-                if possiblyUnvisitedNode in self._visited is False:
+                # possiblyUnvisitedNode: Node = edge.destination if edge.source == newSmallest else edge.source
+                if edge.source == newSmallest:
+                    possiblyUnvisitedNode: Node = edge.destination
+                else:
+                    possiblyUnvisitedNode = edge.source
+
+                if possiblyUnvisitedNode in self._visited:
                     altPath = self._totalCosts[newSmallest] + edge.weight
                     if possiblyUnvisitedNode in self._totalCosts.keys() and altPath < self._totalCosts[possiblyUnvisitedNode]:
                         self._totalCosts[possiblyUnvisitedNode]    = altPath
                         self._previousNodes[possiblyUnvisitedNode] = newSmallest
                         self._previousNodes[possiblyUnvisitedNode] = edge
 
-                        self._minPriorityQueue.updatePriority(possiblyUnvisitedNode, altPath)
+                        self._minPriorityQueue.updatePriority(possiblyUnvisitedNode, round(altPath))
 
         edges:        Edges = Edges([])
-        last:         Node   = tree.find(x=finishNode.x, y=finishNode.y)
+        last:         Node  = tree.find(x=finishNode.x, y=finishNode.y)
         shortestPath: Nodes = nodesFactory()
 
         while last in self._previousNodes.keys():

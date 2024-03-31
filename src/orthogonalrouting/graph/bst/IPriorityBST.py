@@ -16,7 +16,6 @@ from orthogonalrouting.graph.interfaces.INode import INode
 
 class IPriorityBST(ABC):
 
-
     @property
     @abstractmethod
     def rootBSTNode(self) -> 'PriorityBSTNode':

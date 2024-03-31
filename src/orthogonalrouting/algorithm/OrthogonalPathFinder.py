@@ -35,6 +35,7 @@ from orthogonalrouting.models.Connection import Connections
 from orthogonalrouting.models.Connection import connectionsFactory
 
 from orthogonalrouting.models.IInput import IInput
+from orthogonalrouting.models.IInput import InputList
 from orthogonalrouting.models.Point import Point
 from orthogonalrouting.models.Point import Points
 from orthogonalrouting.models.Point import pointsFactory
@@ -43,13 +44,13 @@ from orthogonalrouting.models.internalModels.CollisionData import CollisionData
 from orthogonalrouting.models.logicModels.Connector import Connector
 
 
-@dataclass(slots=True)
+@dataclass(slots=True, eq=True, frozen=True)
 class YBottomValue:
     y:      int = NOT_SET_INT
     bottom: int = NOT_SET_INT
 
 
-@dataclass(slots=True)
+@dataclass(slots=True, eq=True, frozen=True)
 class XRightValue:
     x:     int = NOT_SET_INT
     right: int = NOT_SET_INT
@@ -141,7 +142,7 @@ class OrthogonalPathFinder(IOrthogonalPathFinder):
                     self._addEdge(intersection, vertex)
 
     # noinspection PyChainedComparisons
-    def createLeadLines(self, items: List[IInput], maxWidth: int, maxHeight: int) -> Connections:
+    def createLeadLines(self, items: InputList, maxWidth: int, maxHeight: int) -> Connections:
 
         maxWidth  = maxWidth - self._margin     # TODO: Don't modify input parameters
         maxHeight = maxHeight - self._margin    # TODO: Don't modify input parameters
@@ -264,7 +265,7 @@ class OrthogonalPathFinder(IOrthogonalPathFinder):
 
         return self._connections
 
-    def OrthogonalPath(self, items: List[IInput], maxWidth: int, maxHeight: int, searchAlgorithm: SearchAlgorithm, targetConnector: Connector) -> AlgorithmResults:
+    def orthogonalPath(self, items: InputList, maxWidth: int, maxHeight: int, searchAlgorithm: SearchAlgorithm, targetConnector: Connector) -> AlgorithmResults:
 
         connections:   Connections = self.createLeadLines(items, maxWidth, maxHeight)
         intersections: Points      = pointsFactory()
@@ -315,7 +316,7 @@ class OrthogonalPathFinder(IOrthogonalPathFinder):
 
         return cast(Point, None)
 
-    def shortestPath(self, startNode: INode, finishNode: INode, searchAlgorithm: SearchAlgorithm) -> ShortestGraphPath:
+    def shortestPath(self, startNode: Node, finishNode: Node, searchAlgorithm: SearchAlgorithm) -> ShortestGraphPath:
         """
         """
         assert searchAlgorithm == SearchAlgorithm.Dijkstra, 'Only support Dijkstra'
@@ -389,7 +390,7 @@ class OrthogonalPathFinder(IOrthogonalPathFinder):
         Args:
             data:
         """
-        node: INode = Node(data.x, data.y)
+        node: Node = Node(data.x, data.y)
         if self._graph.find(x=data.x, y=data.y) is None:
             self._graph.addNode(node)
 

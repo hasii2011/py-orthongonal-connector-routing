@@ -63,7 +63,7 @@ class Graph:
         second: GraphVertex = cast(GraphVertex, self._tree.find(x=secondNode.x, y=secondNode.y))
         second.edges.append(genericEdge)
 
-    def addNode(self, node: INode):
+    def addNode(self, node: Node):
         """
 
         Args:
@@ -80,7 +80,7 @@ class Graph:
     def addNodes(self, nodes: Nodes):
 
         for n in nodes:
-            node: INode = cast(INode, n)
+            node: Node = cast(Node, n)
             self.addNode(node=node)
 
     def clear(self):
@@ -175,7 +175,7 @@ class Graph:
 
         self._tree.remove(foundNode)
 
-    def shortestPath(self, algorithm: SearchAlgorithm, startNode: INode, finishNode: INode) -> Tuple[Nodes, Edges]:
+    def shortestPath(self, algorithm: SearchAlgorithm, startNode: Node, finishNode: Node) -> Tuple[Nodes, Edges]:
 
         searchAlgorithm: ISearchAlgorithm
         if algorithm == SearchAlgorithm.Dijkstra:

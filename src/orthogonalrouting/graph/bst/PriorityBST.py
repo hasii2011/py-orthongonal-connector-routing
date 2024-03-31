@@ -138,7 +138,9 @@ class PriorityBST(IPriorityBST):
         if node is None:
             return
         self._nodes.append(node)
-        self.buildTree(nodes=self._nodes)
+        #  this.BuildTree(this.Nodes.ToList());
+        toList = deepcopy(self._nodes)
+        self.buildTree(nodes=toList)
 
     def remove(self, node: INode):
         if node is None:
@@ -152,6 +154,13 @@ class PriorityBST(IPriorityBST):
         self._nodes.clear()
 
     def toList(self) -> Nodes:
+        """
+        Wonder if this should return a copy?
+
+        Returns:
+
+        """
+        # return this.GetEnumerator().ToEnumerable().ToList()
         return self._nodes
 
     def _buildSubTree(self, nodes: Nodes, parent: PriorityBSTNode, isLeft: bool):

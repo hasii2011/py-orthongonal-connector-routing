@@ -1,13 +1,14 @@
 
-from typing import Any
 from typing import List
 from typing import NewType
+from typing import cast
 
 from orthogonalrouting.Common import NOT_SET_INT
 from orthogonalrouting.Common import NO_STRING
 
 from orthogonalrouting.graph.GraphEdge import GraphEdges
 from orthogonalrouting.graph.GraphEdge import graphEdgesFactory
+from orthogonalrouting.graph.Node import Node
 
 from orthogonalrouting.graph.interfaces.INode import INode
 
@@ -20,7 +21,7 @@ class GraphVertex(INode):
         self._y:   int = NOT_SET_INT
         self._key: str = NO_STRING
 
-        self._data:  Any         = None
+        self._data:  Node        = cast(Node, None)
         self._edges: GraphEdges  = graphEdgesFactory()
 
     @property
@@ -48,11 +49,11 @@ class GraphVertex(INode):
         self._y = value
 
     @property
-    def data(self) -> Any:
+    def data(self) -> Node:
         return self._data
 
     @data.setter
-    def data(self, value: Any):
+    def data(self, value: Node):
         self._data = value
 
     @property
